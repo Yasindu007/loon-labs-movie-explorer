@@ -4,7 +4,7 @@ stages:
 mirror_to_github:
   stage: mirror
   only:
-    - main  # or master or your default branch
+    - main
   script:
     - git config --global user.email "Yasindu007@example.com"
     - git config --global user.name "Yasindu007"
