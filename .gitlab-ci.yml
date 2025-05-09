@@ -6,7 +6,7 @@ mirror_to_github:
   only:
     - main
   script:
-    - git config --global user.email "malithdesilva64@gmail.com"
+    - git config --global user.email "Yasindu007@example.com"
     - git config --global user.name "Yasindu007"
     - git clone --mirror https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/Yasindu007/loon-labs-movie-explorer.git
     - cd loon-labs-movie-explorer.git
