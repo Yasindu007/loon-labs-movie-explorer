@@ -1,36 +1,36 @@
-import React, { useState } from 'react';
-import { TextField, InputAdornment, IconButton } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
+import React, { useState, useContext } from 'react';
+import { TextField, Button, Box } from '@mui/material';
+import { Search } from 'lucide-react';
+import { MovieContext } from '../context/MovieContext';
 
-const SearchBar = ({ onSearch }) => {
+const SearchBar = () => {
+  const { searchMovies } = useContext(MovieContext);
   const [query, setQuery] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (query.trim()) {
-      onSearch(query);
+      searchMovies(query);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <TextField
-        fullWidth
-        variant="outlined"
-        placeholder="Search for a movie..."
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton type="submit">
-                <SearchIcon />
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
+    <Box component="form" onSubmit={handleSubmit} sx={{ marginBottom: '20px' }}>
+      <TextField 
+        value={query} 
+        onChange={(e) => setQuery(e.target.value)} 
+        label="Search Movies" 
+        fullWidth 
       />
-    </form>
+      <Button 
+        type="submit" 
+        variant="contained" 
+        sx={{ mt: 1 }}
+        startIcon={<Search size={18} />}
+      >
+        Search
+      </Button>
+    </Box>
   );
 };
 
