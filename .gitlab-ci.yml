@@ -8,6 +8,6 @@ mirror_to_github:
   script:
     - git config --global user.email "Yasindu007@example.com"
     - git config --global user.name "Yasindu007"
-    - git clone --mirror https:s//gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/Yasindu007/loon-labs-movie-explorer
+    - git clone --mirror https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/Yasindu007/loon-labs-movie-explorer.git
     - cd loon-labs-movie-explorer.git
-    - git push --mirror https://$GITHUB_USERNAME:$GITHUB_TOKEN@github.com/Yasindu007/loon-labs-movie-explorer.git
+    - git push --mirror https://$GITHUB_USERNAME:$GITHUB_TOKEN@github.com/Yasindu007/loon-labs-movie-explorer
