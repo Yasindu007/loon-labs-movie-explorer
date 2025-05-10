@@ -4,7 +4,7 @@ import movieService from '../services/api';
 
 export const MovieContext = createContext();
 
-export const MovieProvider = ({ children }) => {
+export const MovieContextProvider = ({ children }) => {
   const [movies, setMovies] = useState([]);
   const [trending, setTrending] = useState([]);
   const [favorites, setFavorites] = useState(() => JSON.parse(localStorage.getItem('favorites')) || []);
@@ -78,16 +78,16 @@ export const MovieProvider = ({ children }) => {
   const filterMovies = async (page = 1) => {
     try {
       setLoading(true);
-      
+
       const filters = {
         genreId: selectedGenre,
         year: yearFilter,
-        minRating: ratingFilter || 0
+        minRating: ratingFilter || 0,
       };
-      
+
       const data = await movieService.discoverMovies(filters, page);
-      
-      setMovies(prev => (page === 1 ? data.results : [...prev, ...data.results]));
+
+      setMovies((prev) => (page === 1 ? data.results : [...prev, ...data.results]));
       setTotalPages(data.total_pages);
       setIsFiltered(true);
       setPage(page);
@@ -143,19 +143,22 @@ export const MovieProvider = ({ children }) => {
   return (
     <MovieContext.Provider
       value={{
-        trending,
+        search,
+        setSearch,
         movies,
-        searchMovies,
+        setMovies,
+        trending,
+        setTrending,
+        loading,
+        setLoading,
         favorites,
         addFavorite,
         removeFavorite,
         isFavorite,
-        search,
         darkMode,
         setDarkMode,
         page,
         totalPages,
-        loading,
         loadMore,
         // Filter related
         genres,

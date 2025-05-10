@@ -6,26 +6,24 @@ import MovieCard from './MovieCard';
 const MovieList = () => {
   const { 
     movies, 
-    trending,
+    trending, 
     loading, 
     loadMore, 
     page, 
-    totalPages,
-    search,
-    isFiltered
+    totalPages, 
+    search, 
+    isFiltered 
   } = useContext(MovieContext);
-  
-  // Use the appropriate list of movies
+
   const list = movies.length ? movies : trending;
-  
-  // Determine what to show as the list title
+
   const getListTitle = () => {
     if (search) {
       return `Search Results for "${search}"`;
     } else if (isFiltered) {
-      return "Filtered Movies";
+      return 'Filtered Movies';
     } else {
-      return "Trending Movies";
+      return 'Trending Movies';
     }
   };
 
@@ -36,12 +34,7 @@ const MovieList = () => {
       </Typography>
 
       {list.length === 0 && !loading ? (
-        <Box sx={{ 
-          textAlign: 'center', 
-          py: 8, 
-          backgroundColor: 'rgba(0,0,0,0.04)', 
-          borderRadius: 2 
-        }}>
+        <Box sx={{ textAlign: 'center', py: 8, backgroundColor: 'rgba(0,0,0,0.04)', borderRadius: 2 }}>
           <Typography variant="h6" color="text.secondary">
             No movies found
           </Typography>
@@ -58,23 +51,15 @@ const MovieList = () => {
               </Grid>
             ))}
           </Grid>
-          
+
           {/* Load More Button */}
-          {(search || isFiltered) && list.length > 0 && page < totalPages && (
-            <Box sx={{ 
-              display: 'flex', 
-              justifyContent: 'center', 
-              mt: 4 
-            }}>
+          {list.length > 0 && page < totalPages && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
               <Button 
                 variant="contained" 
                 onClick={loadMore}
                 disabled={loading}
-                sx={{ 
-                  minWidth: '200px',
-                  borderRadius: '20px',
-                  boxShadow: 2
-                }}
+                sx={{ minWidth: '200px', borderRadius: '20px', boxShadow: 2 }}
               >
                 {loading ? (
                   <CircularProgress size={24} color="inherit" />

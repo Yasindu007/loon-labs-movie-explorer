@@ -175,3 +175,4 @@ const MovieFilter = () => {
 };
 
 export default MovieFilter;
+
