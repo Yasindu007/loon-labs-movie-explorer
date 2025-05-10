@@ -24,7 +24,7 @@ A modern, responsive React application that allows users to discover trending mo
 
 ## 🚀 Live Demo
 
-[View the live demo](https://movie-explorer-demo.vercel.app) (placeholder link)
+[View the live demo](https://movie-explorer-demo.vercel.app) 
 
 ---
 
@@ -73,19 +73,11 @@ src/
 
 ## ⚙️ Installation and Setup
 
-### Prerequisites
-- Node.js (v14 or later)
-- npm or yarn package manager
-- TMDb API key (free from [themoviedb.org](https://www.themoviedb.org/))
-
-### Installation Steps
-
 1. **Create the React app and install dependencies**
    ```bash
-   npx create-react-app "loon-labs-movie-explorer"
-   cd "loon-labs-movie-explorer"
+   npx create-react-app movie-explorer
+   cd movie-explorer
    npm install axios @mui/material @emotion/react @emotion/styled react-router-dom
-   
    ```
 
 2. **Install additional dependencies**

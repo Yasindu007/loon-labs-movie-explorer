@@ -7,7 +7,7 @@ import { MovieContext } from '../context/MovieContext';
 // MovieCard displays a single movie's info in a card format
 const MovieCard = ({ movie }) => {
   // Get favorites and favorite actions from context
-  const { favorites, addFavorite, removeFavorite, isFavorite } = useContext(MovieContext);
+  const { addFavorite, removeFavorite, isFavorite } = useContext(MovieContext);
   
   // Handle clicking the favorite (heart) button
   const handleFavoriteToggle = (e) => {
