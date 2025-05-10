@@ -2,37 +2,45 @@
 
 A modern, responsive React application that allows users to discover trending movies, search for specific films, view detailed information, and save favorites. This application integrates with The Movie Database (TMDb) API to provide real-time movie data.
 
+---
+
 ## 🎬 Features
 
 ### Core Features
-- **User Authentication**: Simple login system with username and password storage
-- **Trending Movies**: Browse currently popular movies from TMDb
-- **Movie Search**: Search for movies by title with instant results
-- **Movie Details**: View comprehensive information about selected movies
-- **Favorites**: Save and manage your favorite movies
-- **Dark/Light Mode**: Toggle between dark and light themes for comfortable viewing
-- **Responsive Design**: Fully responsive layout that works on mobile and desktop devices
+- 🔐 **User Login:** Simple username/password login with credentials stored in localStorage.
+- 🌟 **Trending Movies:** Display trending movies of the week from TMDb on the homepage.
+- 🌟 **Search & Filters:**
+  - Search movies by title with instant results.
+  - Filter by genre, release year, and minimum rating.
+  - Pagination support with a "Load More" button.
+- 🎞️ **Movie Details:** View detailed movie info, including poster, trailer, cast, director, runtime, budget, and genres.
+- ❤️ **Favorites:** Add/remove movies to a favorites list, persisted in localStorage.
+- 💡 **Light/Dark Mode:** Toggle between light and dark themes, saved in localStorage.
+- 📱 **Responsive Design:** Fully responsive layout for mobile, tablet, and desktop.
+- 🛑 **Error Handling:** Graceful handling of API errors and invalid routes with a 404 page.
+- 🔁 **Lazy Loading:** Pages are lazy-loaded to improve initial load performance.
 
-### Enhanced Features
-- **Advanced Filtering**: Filter movies by genre, release year, and minimum rating
-- **Load More**: Pagination support to browse more movies
-- **Persistent State**: User preferences and searches are saved to localStorage
-- **Visual Indicators**: Movie ratings displayed with eye-catching visuals
+---
 
 ## 🚀 Live Demo
 
 [View the live demo](https://movie-explorer-demo.vercel.app) (placeholder link)
 
+---
+
 ## 🛠️ Technologies Used
 
-- **React**: Frontend library for building the user interface
-- **React Router**: Navigation and routing between different views
-- **Material UI**: Component library for consistent and responsive design
-- **Lucide React**: Modern icon library for clean UI elements
-- **Context API**: State management across the application
-- **LocalStorage**: Persistent data storage for user preferences and favorites
-- **Axios**: API request handling (suggested in requirements)
-- **TMDb API**: Movie data source
+- **React:** Front-end library for building the UI.
+- **React Router:** Client-side routing for navigation.
+- **Material UI:** Styling and component library for a polished UI.
+- **Axios:** HTTP client for TMDb API requests.
+- **TMDb API:** Source for movie data (trending, search, details, genres).
+- **React Context API:** Global state management for movies, favorites, and settings.
+- **Lucide React:** Icon library for UI elements.
+- **Vercel/Netlify:** Deployment platform (update based on actual hosting).
+- **LocalStorage:** Persists favorites, theme, and login data.
+
+---
 
 ## 📋 Project Structure
 
@@ -72,17 +80,16 @@ src/
 
 ### Installation Steps
 
-1. **Clone the repository**
+1. **Create the React app and install dependencies**
    ```bash
-   git clone https://github.com/yourusername/movie-explorer.git
-   cd movie-explorer
+   npx create-react-app "loon-labs-movie-explorer"
+   cd "loon-labs-movie-explorer"
+   npm install axios @mui/material @emotion/react @emotion/styled react-router-dom
+   
    ```
 
-2. **Install dependencies**
+2. **Install additional dependencies**
    ```bash
-   # Install all dependencies
-   npm install
-
    # If Lucide React isn't installed properly, install it explicitly
    npm install lucide-react
    ```
