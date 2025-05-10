@@ -31,3 +31,6 @@ It uses the TMDb (The Movie Database) API for real-time data.
    ```bash
    git clone https://gitlab.com/your-username/movie-explorer.git
    cd movie-explorer
+
+
+
