@@ -3,7 +3,7 @@
 This is a React web application that allows users to search for movies, view details, discover trending films, and save favorites.  
 It uses the TMDb (The Movie Database) API for real-time data.
 
-## 🌟 Features
+## 🌟 Features.
 
 - User login with username & password
 - Search bar to find movies
