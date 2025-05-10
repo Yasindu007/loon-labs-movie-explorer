@@ -26,11 +26,14 @@ const movieService = {
   },
 
   // Search movies by query
-  searchMovies: async (query, page = 1) => {
+  searchMovies: async (query, page = 1, filters = {}) => {
     try {
-      const response = await tmdbAPI.get('/search/movie', {
-        params: { query, page },
-      });
+      const params = {
+        query,
+        page,
+        ...filters,
+      };
+      const response = await tmdbAPI.get('/search/movie', { params });
       return response.data;
     } catch (error) {
       console.error('Error searching movies:', error);
@@ -60,7 +63,22 @@ const movieService = {
       console.error('Error fetching genres:', error);
       throw error;
     }
-  }
+  },
+
+  // Discover movies with filters
+  discoverMovies: async (page = 1, filters = {}) => {
+    try {
+      const params = {
+        page,
+        ...filters,
+      };
+      const response = await tmdbAPI.get('/discover/movie', { params });
+      return response.data;
+    } catch (error) {
+      console.error('Error discovering movies:', error);
+      throw error;
+    }
+  },
 };
 
 export default movieService;

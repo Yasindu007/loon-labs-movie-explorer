@@ -19,12 +19,12 @@ import {
   Divider
 } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu as MenuIcon, Film, Heart, User, LogIn } from 'lucide-react';
+import { Menu as MenuIcon, Film, Heart, LogIn } from 'lucide-react'; // Removed unused 'User'
 import ThemeToggle from './ThemeToggle';
 import { MovieContext } from '../context/MovieContext';
 
 const Header = () => {
-  const { darkMode } = useContext(MovieContext);
+  const { darkMode, setSearch } = useContext(MovieContext);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [userMenuAnchor, setUserMenuAnchor] = useState(null);
   const theme = useTheme();
@@ -54,13 +54,26 @@ const Header = () => {
     window.location.reload();
   };
 
+  const handleGoHome = () => {
+    setSearch('');
+    localStorage.removeItem('lastSearch');
+  };
+
   const isActive = (path) => {
     return location.pathname === path;
   };
 
   const navItems = [
-    { label: 'Home', icon: <Film size={18} />, path: '/' },
-    { label: 'Favorites', icon: <Heart size={18} />, path: '/favorites' }
+    { 
+      label: 'Home', 
+      icon: <Film size={18} />, 
+      path: '/' 
+    },
+    { 
+      label: 'Favorites', 
+      icon: <Heart size={18} />, 
+      path: '/favorites' 
+    }
   ];
 
   const drawer = (
@@ -131,43 +144,54 @@ const Header = () => {
       elevation={0}
       sx={{ 
         backdropFilter: 'blur(8px)',
-        bgcolor: darkMode ? 'rgba(18, 18, 18, 0.8)' : 'rgba(255, 255, 255, 0.8)',
+        bgcolor: darkMode ? 'rgba(18, 18, 18, 0.9)' : 'rgba(255, 255, 255, 0.95)',
         borderBottom: '1px solid',
         borderColor: 'divider',
       }}
     >
       <Container>
         <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
-          {/* Mobile menu */}
+          {/* Mobile menu button with better contrast */}
           {isMobile && (
             <IconButton
               color="inherit"
               aria-label="open drawer"
               edge="start"
               onClick={toggleDrawer(true)}
+              sx={{
+                color: darkMode ? '#fff' : '#1976d2', // Use primary color in light mode
+              }}
             >
               <MenuIcon />
             </IconButton>
           )}
           
-          {/* Logo */}
+          {/* Logo with better visibility */}
           <Typography 
             variant="h6" 
             component={Link} 
             to="/"
+            onClick={handleGoHome}
             sx={{ 
               fontWeight: 'bold',
               textDecoration: 'none',
-              color: 'inherit',
+              color: darkMode ? '#fff' : '#1976d2', // Use primary color in light mode
               display: 'flex',
               alignItems: 'center',
+              cursor: 'pointer'
             }}
           >
-            <Film size={24} style={{ marginRight: '8px' }} />
+            <Film 
+              size={24} 
+              style={{ 
+                marginRight: '8px',
+                color: 'inherit'
+              }} 
+            />
             Movie Explorer
           </Typography>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation with improved contrast */}
           {!isMobile && (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               {navItems.map((item) => (
@@ -175,38 +199,57 @@ const Header = () => {
                   key={item.label}
                   component={Link}
                   to={item.path}
-                  color="inherit"
-                  startIcon={item.icon}
+                  onClick={item.path === '/' ? handleGoHome : undefined}
                   sx={{ 
                     mx: 1,
                     borderRadius: '8px',
-                    backgroundColor: isActive(item.path) ? (darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)') : 'transparent',
+                    color: darkMode ? '#fff' : '#1976d2', // Use primary color in light mode
+                    backgroundColor: isActive(item.path) 
+                      ? (darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(25,118,210,0.1)') 
+                      : 'transparent',
                     '&:hover': {
-                      backgroundColor: darkMode ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)',
+                      backgroundColor: darkMode 
+                        ? 'rgba(255,255,255,0.15)' 
+                        : 'rgba(25,118,210,0.15)',
                     }
                   }}
                 >
+                  <Box sx={{ 
+                    mr: 1, 
+                    display: 'flex', 
+                    alignItems: 'center',
+                    color: 'inherit'
+                  }}>
+                    {item.icon}
+                  </Box>
                   {item.label}
                 </Button>
               ))}
             </Box>
           )}
 
-          {/* User section */}
+          {/* User section with improved visibility */}
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <ThemeToggle />
             
             {username ? (
               <>
                 <Button 
-                  color="inherit"
+                  sx={{ 
+                    ml: 1, 
+                    textTransform: 'none',
+                    color: darkMode ? '#fff' : '#1976d2', // Use primary color in light mode
+                  }}
                   onClick={handleUserMenuOpen}
                   startIcon={
-                    <Avatar sx={{ width: 28, height: 28, bgcolor: 'primary.main' }}>
+                    <Avatar sx={{ 
+                      width: 28, 
+                      height: 28, 
+                      bgcolor: darkMode ? 'primary.main' : 'primary.dark'
+                    }}>
                       {username.charAt(0).toUpperCase()}
                     </Avatar>
                   }
-                  sx={{ ml: 1, textTransform: 'none' }}
                 >
                   {!isMobile && username}
                 </Button>
@@ -214,8 +257,6 @@ const Header = () => {
                   anchorEl={userMenuAnchor}
                   open={Boolean(userMenuAnchor)}
                   onClose={handleUserMenuClose}
-                  transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                  anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                 >
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </Menu>
@@ -223,11 +264,13 @@ const Header = () => {
             ) : (
               !isMobile && (
                 <Button 
-                  color="inherit" 
                   component={Link} 
                   to="/login"
+                  sx={{ 
+                    ml: 1,
+                    color: darkMode ? '#fff' : '#1976d2', // Use primary color in light mode
+                  }}
                   startIcon={<LogIn size={18} />}
-                  sx={{ ml: 1 }}
                 >
                   Login
                 </Button>
@@ -237,7 +280,7 @@ const Header = () => {
         </Toolbar>
       </Container>
       
-      {/* Mobile Drawer */}
+      {/* Mobile Drawer with improved contrast */}
       <Drawer
         anchor="left"
         open={drawerOpen}

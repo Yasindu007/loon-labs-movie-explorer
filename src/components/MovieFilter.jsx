@@ -94,13 +94,14 @@ const MovieFilter = () => {
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2} sx={{ mt: 1 }}>
             <Grid item xs={12} sm={4}>
-              <FormControl fullWidth size="small">
+              <FormControl fullWidth size="medium" sx={{ minWidth: 220 }}>
                 <InputLabel id="genre-label">Genre</InputLabel>
                 <Select
                   labelId="genre-label"
                   value={selectedGenre}
                   label="Genre"
                   onChange={(e) => setSelectedGenre(e.target.value)}
+                  size="medium"
                 >
                   <MenuItem value="">
                     <em>Any Genre</em>
@@ -115,13 +116,14 @@ const MovieFilter = () => {
             </Grid>
             
             <Grid item xs={12} sm={4}>
-              <FormControl fullWidth size="small">
+              <FormControl fullWidth size="medium" sx={{ minWidth: 220 }}>
                 <InputLabel id="year-label">Release Year</InputLabel>
                 <Select
                   labelId="year-label"
                   value={yearFilter}
                   label="Release Year"
                   onChange={(e) => setYearFilter(e.target.value)}
+                  size="medium"
                 >
                   <MenuItem value="">
                     <em>Any Year</em>
@@ -147,6 +149,7 @@ const MovieFilter = () => {
                 min={0}
                 max={10}
                 valueLabelDisplay="auto"
+                sx={{ mt: 3, mb: 1 }}
               />
             </Grid>
           </Grid>

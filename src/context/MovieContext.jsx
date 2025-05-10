@@ -4,95 +4,107 @@ import movieService from '../services/api';
 
 export const MovieContext = createContext();
 
-export const MovieContextProvider = ({ children }) => {
+export const MovieProvider = ({ children }) => {
   const [movies, setMovies] = useState([]);
   const [trending, setTrending] = useState([]);
   const [favorites, setFavorites] = useState(() => JSON.parse(localStorage.getItem('favorites')) || []);
-  const [search, setSearch] = useState(() => localStorage.getItem('lastSearch') || '');
+  const [search, setSearch] = useState(localStorage.getItem('lastSearch') || '');
   const [darkMode, setDarkMode] = useState(() => JSON.parse(localStorage.getItem('darkMode')) || false);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
-  
-  // Filter states
+
+  // Filters
   const [genres, setGenres] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState('');
   const [yearFilter, setYearFilter] = useState('');
   const [ratingFilter, setRatingFilter] = useState(0);
   const [isFiltered, setIsFiltered] = useState(false);
 
-  // Load trending movies and genres when component mounts
   useEffect(() => {
     fetchTrending();
-    fetchGenres();
+    movieService.getGenres().then(setGenres);
   }, []);
 
-  // Save dark mode preference to localStorage
   useEffect(() => {
     localStorage.setItem('darkMode', JSON.stringify(darkMode));
   }, [darkMode]);
 
-  const fetchGenres = async () => {
-    try {
-      const genreData = await movieService.getGenres();
-      setGenres(genreData);
-    } catch (error) {
-      console.error('Error fetching genres:', error);
-    }
-  };
-
   const fetchTrending = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
       const data = await movieService.getTrending();
       setTrending(data);
-    } catch (error) {
-      console.error('Error in fetchTrending:', error);
+    } catch {
+      setTrending([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const searchMovies = async (query, page = 1) => {
-    if (!query.trim()) return;
-    
+  const searchMovies = async (query, pageNum = 1, filters = {}) => {
+    if (!query.trim() && !filters.with_genres && !filters.year && !filters['vote_average.gte']) return;
+    setLoading(true);
     try {
-      setLoading(true);
-      const data = await movieService.searchMovies(query, page);
-      
-      setMovies(prev => (page === 1 ? data.results : [...prev, ...data.results]));
+      const data = await movieService.searchMovies(query, pageNum, filters);
+      setMovies(prev => (pageNum === 1 ? data.results : [...prev, ...data.results]));
       setTotalPages(data.total_pages);
       setSearch(query);
-      setIsFiltered(false);
-      
-      // Save search query to localStorage
       localStorage.setItem('lastSearch', query);
-      setPage(page);
-    } catch (error) {
-      console.error('Error in searchMovies:', error);
+      setPage(pageNum);
+    } catch {
+      setMovies([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const filterMovies = async (page = 1) => {
+  const loadMore = () => {
+    const filters = {
+      ...(selectedGenre && { with_genres: selectedGenre }),
+      ...(yearFilter && { year: yearFilter }),
+      ...(ratingFilter > 0 && { 'vote_average.gte': ratingFilter }),
+    };
+    if (page < totalPages) {
+      if (search && search.trim()) {
+        searchMovies(search, page + 1, filters);
+      } else {
+        discoverMore(page + 1, filters);
+      }
+    }
+  };
+
+  const discoverMore = async (nextPage, filters) => {
+    setLoading(true);
     try {
-      setLoading(true);
+      const data = await movieService.discoverMovies(nextPage, filters);
+      setMovies(prev => [...prev, ...data.results]);
+      setPage(nextPage);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-      const filters = {
-        genreId: selectedGenre,
-        year: yearFilter,
-        minRating: ratingFilter || 0,
-      };
-
-      const data = await movieService.discoverMovies(filters, page);
-
-      setMovies((prev) => (page === 1 ? data.results : [...prev, ...data.results]));
+  const filterMovies = async () => {
+    setIsFiltered(true);
+    setLoading(true);
+    const filters = {
+      ...(selectedGenre && { with_genres: selectedGenre }),
+      ...(yearFilter && { year: yearFilter }),
+      ...(ratingFilter > 0 && { 'vote_average.gte': ratingFilter }),
+    };
+    try {
+      let data;
+      if (search && search.trim()) {
+        data = await movieService.searchMovies(search, 1, filters);
+      } else {
+        data = await movieService.discoverMovies(1, filters);
+      }
+      setMovies(data.results);
       setTotalPages(data.total_pages);
-      setIsFiltered(true);
-      setPage(page);
-    } catch (error) {
-      console.error('Error filtering movies:', error);
+      setPage(1);
+    } catch {
+      setMovies([]);
     } finally {
       setLoading(false);
     }
@@ -102,26 +114,9 @@ export const MovieContextProvider = ({ children }) => {
     setSelectedGenre('');
     setYearFilter('');
     setRatingFilter(0);
-
-    // If there's a previous search, re-run it
-    if (search) {
-      searchMovies(search, 1);
-    } else {
-      // Otherwise, go back to trending
-      setMovies([]);
-      setIsFiltered(false);
-    }
-  };
-
-  const loadMore = () => {
-    if (page < totalPages) {
-      const nextPage = page + 1;
-      if (isFiltered) {
-        filterMovies(nextPage);
-      } else if (search) {
-        searchMovies(search, nextPage);
-      }
-    }
+    setIsFiltered(false);
+    setMovies([]);
+    setSearch('');
   };
 
   const addFavorite = (movie) => {
@@ -136,41 +131,34 @@ export const MovieContextProvider = ({ children }) => {
     localStorage.setItem('favorites', JSON.stringify(updated));
   };
 
-  const isFavorite = (id) => {
-    return favorites.some(movie => movie.id === id);
-  };
+  const isFavorite = (id) => favorites.some(movie => movie.id === id);
 
   return (
     <MovieContext.Provider
       value={{
-        search,
-        setSearch,
+        trending,
         movies,
         setMovies,
-        trending,
-        setTrending,
-        loading,
-        setLoading,
+        searchMovies,
         favorites,
         addFavorite,
         removeFavorite,
         isFavorite,
+        search,
+        setSearch,
         darkMode,
         setDarkMode,
         page,
         totalPages,
+        loading,
         loadMore,
-        // Filter related
         genres,
-        selectedGenre,
-        setSelectedGenre,
-        yearFilter,
-        setYearFilter,
-        ratingFilter,
-        setRatingFilter,
+        selectedGenre, setSelectedGenre,
+        yearFilter, setYearFilter,
+        ratingFilter, setRatingFilter,
         filterMovies,
         resetFilters,
-        isFiltered
+        isFiltered,
       }}
     >
       {children}

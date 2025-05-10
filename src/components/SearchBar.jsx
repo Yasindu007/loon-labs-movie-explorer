@@ -1,11 +1,23 @@
-import React, { useState, useContext } from 'react';
-import { TextField, Button, Box } from '@mui/material';
-import { Search } from 'lucide-react';
+import React, { useState, useContext, useEffect } from 'react';
+import { 
+  Paper, 
+  TextField, 
+  InputAdornment, 
+  IconButton, 
+  Box, 
+  Button,
+  Typography
+} from '@mui/material';
+import { Search, X } from 'lucide-react';
 import { MovieContext } from '../context/MovieContext';
 
 const SearchBar = () => {
-  const { searchMovies } = useContext(MovieContext);
-  const [query, setQuery] = useState('');
+  const { search, setSearch, searchMovies } = useContext(MovieContext);
+  const [query, setQuery] = useState(search || '');
+
+  useEffect(() => {
+    setQuery(search || '');
+  }, [search]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -14,22 +26,72 @@ const SearchBar = () => {
     }
   };
 
+  const handleClear = () => {
+    setQuery('');
+    setSearch('');
+  };
+
   return (
-    <Box component="form" onSubmit={handleSubmit} sx={{ marginBottom: '20px' }}>
-      <TextField 
-        value={query} 
-        onChange={(e) => setQuery(e.target.value)} 
-        label="Search Movies" 
-        fullWidth 
-      />
-      <Button 
-        type="submit" 
-        variant="contained" 
-        sx={{ mt: 1 }}
-        startIcon={<Search size={18} />}
+    <Box sx={{ mb: 4 }}>
+      <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 3 }}>
+        Discover Movies
+      </Typography>
+      
+      <Paper 
+        elevation={3} 
+        sx={{ 
+          borderRadius: 3,
+          overflow: 'hidden',
+          mb: 2
+        }}
       >
-        Search
-      </Button>
+        <form onSubmit={handleSubmit}>
+          <Box sx={{ display: 'flex', alignItems: 'stretch' }}>
+            <TextField
+              fullWidth
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search for movies..."
+              variant="outlined"
+              sx={{ 
+                '& .MuiOutlinedInput-root': { 
+                  borderRadius: 0,
+                  '& fieldset': { border: 'none' }
+                },
+                '& .MuiOutlinedInput-input': {
+                  py: 2
+                }
+              }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search size={20} />
+                  </InputAdornment>
+                ),
+                endAdornment: query && (
+                  <InputAdornment position="end">
+                    <IconButton onClick={handleClear} edge="end" size="small">
+                      <X size={16} />
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
+            />
+            <Button 
+              type="submit"
+              variant="contained"
+              disableElevation
+              sx={{ 
+                borderRadius: 0,
+                px: 4,
+                whiteSpace: 'nowrap'
+              }}
+            >
+              Search
+            </Button>
+          </Box>
+        </form>
+      </Paper>
     </Box>
   );
 };
