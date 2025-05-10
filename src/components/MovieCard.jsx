@@ -4,14 +4,17 @@ import { Link } from 'react-router-dom';
 import { Heart, Star } from 'lucide-react';
 import { MovieContext } from '../context/MovieContext';
 
+// MovieCard displays a single movie's info in a card format
 const MovieCard = ({ movie }) => {
+  // Get favorites and favorite actions from context
   const { favorites, addFavorite, removeFavorite, isFavorite } = useContext(MovieContext);
   
-  // Handle favorite toggle
+  // Handle clicking the favorite (heart) button
   const handleFavoriteToggle = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
+    e.preventDefault(); // Prevents navigation when clicking the heart
+    e.stopPropagation(); // Prevents event bubbling
+
+    // Add or remove from favorites
     if (isFavorite(movie.id)) {
       removeFavorite(movie.id);
     } else {
@@ -20,6 +23,7 @@ const MovieCard = ({ movie }) => {
   };
 
   return (
+    // Card component is clickable and links to the movie's detail page
     <Card 
       sx={{ 
         height: '100%', 
@@ -38,7 +42,7 @@ const MovieCard = ({ movie }) => {
       to={`/movie/${movie.id}`}
       style={{ textDecoration: 'none' }}
     >
-      {/* Favorite button */}
+      {/* Favorite heart button in the top-right corner */}
       <IconButton
         onClick={handleFavoriteToggle}
         sx={{
@@ -52,6 +56,7 @@ const MovieCard = ({ movie }) => {
           zIndex: 10
         }}
       >
+        {/* Heart icon is filled if movie is a favorite */}
         <Heart 
           color={isFavorite(movie.id) ? "red" : "white"} 
           size={20} 
@@ -59,7 +64,7 @@ const MovieCard = ({ movie }) => {
         />
       </IconButton>
 
-      {/* Movie poster */}
+      {/* Movie poster image */}
       <CardMedia
         component="img"
         sx={{ 
@@ -72,7 +77,7 @@ const MovieCard = ({ movie }) => {
         alt={movie.title}
       />
       
-      {/* Rating */}
+      {/* Movie rating in the top-left corner */}
       <Box
         sx={{
           position: 'absolute',
@@ -86,13 +91,14 @@ const MovieCard = ({ movie }) => {
           gap: '4px'
         }}
       >
+        {/* Star icon and rating number */}
         <Star color="gold" size={16} fill="gold" />
         <Typography variant="body2" sx={{ color: 'white', fontWeight: 'bold' }}>
           {movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A'}
         </Typography>
       </Box>
       
-      {/* Content */}
+      {/* Movie title and release year */}
       <CardContent sx={{ flexGrow: 1, padding: '12px' }}>
         <Typography variant="subtitle1" component="div" noWrap fontWeight="bold">
           {movie.title}
@@ -102,7 +108,7 @@ const MovieCard = ({ movie }) => {
         </Typography>
       </CardContent>
       
-      {/* Hover content */}
+      {/* Movie overview appears on hover at the bottom of the card */}
       <Box
         sx={{
           position: 'absolute',
@@ -111,13 +117,14 @@ const MovieCard = ({ movie }) => {
           right: 0,
           backgroundColor: 'rgba(0,0,0,0.85)',
           padding: '12px',
-          transform: 'translateY(100%)',
+          transform: 'translateY(100%)', // Hidden by default
           transition: 'transform 0.3s',
           '.MuiCard-root:hover &': {
-            transform: 'translateY(0)',
+            transform: 'translateY(0)', // Slides up on hover
           }
         }}
       >
+        {/* Movie description, truncated to 3 lines */}
         <Typography variant="body2" sx={{ 
           color: 'white', 
           mb: 1,

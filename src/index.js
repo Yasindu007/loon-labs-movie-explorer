@@ -1,20 +1,4 @@
-// import React from 'react';
-// import ReactDOM from 'react-dom/client';
-// import './index.css';
-// import App from './App';
-// import reportWebVitals from './reportWebVitals';
-
-// const root = ReactDOM.createRoot(document.getElementById('root'));
-// root.render(
-//   <React.StrictMode>
-//     <App />
-//   </React.StrictMode>
-// );
-
-// // If you want to start measuring performance in your app, pass a function
-// // to log results (for example: reportWebVitals(console.log))
-// // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-// reportWebVitals();
+// This is the main entry point for the React app
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
@@ -22,11 +6,20 @@ import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import { MovieProvider } from './context/MovieContext';
 
+// Create the root element where the React app will be rendered
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+// Render the app inside the root element
 root.render(
+  // BrowserRouter enables navigation between pages without reloading
   <BrowserRouter>
+    {/* MovieProvider gives all components access to movie data and actions */}
     <MovieProvider>
+      {/* App is the main component for the whole application */}
       <App />
     </MovieProvider>
   </BrowserRouter>
 );
+
+// If you want to measure performance, you can use reportWebVitals (optional)
+// Learn more: https://bit.ly/CRA-vitals

@@ -19,20 +19,30 @@ import {
   Divider
 } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu as MenuIcon, Film, Heart, LogIn } from 'lucide-react'; // Removed unused 'User'
+import { Menu as MenuIcon, Film, Heart, LogIn } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import { MovieContext } from '../context/MovieContext';
 
+// The Header component displays the top navigation bar
 const Header = () => {
+  // Access dark mode and search state from context
   const { darkMode, setSearch } = useContext(MovieContext);
+
+  // State for mobile drawer (side menu)
   const [drawerOpen, setDrawerOpen] = useState(false);
+
+  // State for user menu (avatar dropdown)
   const [userMenuAnchor, setUserMenuAnchor] = useState(null);
+
+  // Theme and responsive helpers from MUI
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const location = useLocation();
-  
+
+  // Get username from localStorage (if logged in)
   const username = localStorage.getItem('username');
-  
+
+  // Function to open/close the mobile drawer
   const toggleDrawer = (open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
@@ -40,29 +50,31 @@ const Header = () => {
     setDrawerOpen(open);
   };
 
+  // Open/close user menu (avatar dropdown)
   const handleUserMenuOpen = (event) => {
     setUserMenuAnchor(event.currentTarget);
   };
-
   const handleUserMenuClose = () => {
     setUserMenuAnchor(null);
   };
 
+  // Log out the user
   const handleLogout = () => {
     localStorage.removeItem('username');
     handleUserMenuClose();
     window.location.reload();
   };
 
+  // When Home or logo is clicked, clear search and lastSearch
   const handleGoHome = () => {
     setSearch('');
     localStorage.removeItem('lastSearch');
   };
 
-  const isActive = (path) => {
-    return location.pathname === path;
-  };
+  // Helper to check if a nav item is active (for highlighting)
+  const isActive = (path) => location.pathname === path;
 
+  // Navigation items for the menu
   const navItems = [
     { 
       label: 'Home', 
@@ -76,6 +88,7 @@ const Header = () => {
     }
   ];
 
+  // Drawer content for mobile navigation
   const drawer = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)} onKeyDown={toggleDrawer(false)}>
       <Box sx={{ p: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -85,6 +98,7 @@ const Header = () => {
       </Box>
       <Divider />
       <List>
+        {/* Navigation links */}
         {navItems.map((item) => (
           <ListItem 
             button 
@@ -110,6 +124,7 @@ const Header = () => {
             <ListItemText primary={item.label} />
           </ListItem>
         ))}
+        {/* Show Login link if user is not logged in */}
         {!username && (
           <ListItem 
             button 
@@ -151,7 +166,7 @@ const Header = () => {
     >
       <Container>
         <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
-          {/* Mobile menu button with better contrast */}
+          {/* Hamburger menu icon for mobile */}
           {isMobile && (
             <IconButton
               color="inherit"
@@ -166,7 +181,7 @@ const Header = () => {
             </IconButton>
           )}
           
-          {/* Logo with better visibility */}
+          {/* Logo and app name, clickable to go home */}
           <Typography 
             variant="h6" 
             component={Link} 
@@ -175,7 +190,7 @@ const Header = () => {
             sx={{ 
               fontWeight: 'bold',
               textDecoration: 'none',
-              color: darkMode ? '#fff' : '#1976d2', // Use primary color in light mode
+              color: darkMode ? '#fff' : '#1976d2',
               display: 'flex',
               alignItems: 'center',
               cursor: 'pointer'
@@ -191,7 +206,7 @@ const Header = () => {
             Movie Explorer
           </Typography>
 
-          {/* Desktop Navigation with improved contrast */}
+          {/* Desktop navigation links */}
           {!isMobile && (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               {navItems.map((item) => (
@@ -203,7 +218,7 @@ const Header = () => {
                   sx={{ 
                     mx: 1,
                     borderRadius: '8px',
-                    color: darkMode ? '#fff' : '#1976d2', // Use primary color in light mode
+                    color: darkMode ? '#fff' : '#1976d2',
                     backgroundColor: isActive(item.path) 
                       ? (darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(25,118,210,0.1)') 
                       : 'transparent',
@@ -228,17 +243,19 @@ const Header = () => {
             </Box>
           )}
 
-          {/* User section with improved visibility */}
+          {/* User section: theme toggle and user menu/login */}
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {/* Button to toggle dark/light mode */}
             <ThemeToggle />
             
+            {/* If user is logged in, show avatar and menu; else show Login button */}
             {username ? (
               <>
                 <Button 
                   sx={{ 
                     ml: 1, 
                     textTransform: 'none',
-                    color: darkMode ? '#fff' : '#1976d2', // Use primary color in light mode
+                    color: darkMode ? '#fff' : '#1976d2',
                   }}
                   onClick={handleUserMenuOpen}
                   startIcon={
@@ -251,6 +268,7 @@ const Header = () => {
                     </Avatar>
                   }
                 >
+                  {/* Show username on desktop */}
                   {!isMobile && username}
                 </Button>
                 <Menu
@@ -268,7 +286,7 @@ const Header = () => {
                   to="/login"
                   sx={{ 
                     ml: 1,
-                    color: darkMode ? '#fff' : '#1976d2', // Use primary color in light mode
+                    color: darkMode ? '#fff' : '#1976d2',
                   }}
                   startIcon={<LogIn size={18} />}
                 >
@@ -280,7 +298,7 @@ const Header = () => {
         </Toolbar>
       </Container>
       
-      {/* Mobile Drawer with improved contrast */}
+      {/* Drawer for mobile navigation */}
       <Drawer
         anchor="left"
         open={drawerOpen}

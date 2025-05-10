@@ -7,7 +7,9 @@ import MovieList from '../components/MovieList';
 import MovieFilter from '../components/MovieFilter';
 import { MovieContext } from '../context/MovieContext';
 
+// Home page shows the search bar, filter options, and the list of movies
 const Home = () => {
+  // Get movie data and functions from context
   const { 
     trending, 
     movies, 
@@ -19,6 +21,7 @@ const Home = () => {
     setMovies
   } = useContext(MovieContext);
 
+  // When the search box is cleared, reset the movies list
   useEffect(() => {
     if (!search) {
       setMovies([]);
@@ -27,8 +30,11 @@ const Home = () => {
 
   return (
     <>
+      {/* Search bar at the top */}
       <SearchBar />
+      {/* Filter options for genre, year, rating */}
       <MovieFilter />
+      {/* List of movies (trending, search, or filtered) */}
       <MovieList />
     </>
   );

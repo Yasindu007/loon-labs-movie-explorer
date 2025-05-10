@@ -21,20 +21,24 @@ import {
 } from 'lucide-react';
 import { MovieContext } from '../context/MovieContext';
 
+// MoviePage shows detailed info about a single movie
 const MoviePage = () => {
+  // Get the movie ID from the URL
   const { id } = useParams();
+  // Local state for movie details, loading, and error
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  // Get favorites and favorite actions from context
   const { favorites, addFavorite, removeFavorite } = useContext(MovieContext);
   const API_KEY = process.env.REACT_APP_TMDB_API_KEY;
 
-  // Check if movie is in favorites
+  // Check if this movie is in the user's favorites
   const isFavorite = (movieId) => {
     return favorites.some(fav => fav.id === Number(movieId));
   };
 
-  // Handle favorite toggle
+  // Add or remove this movie from favorites
   const handleFavoriteToggle = () => {
     if (isFavorite(id)) {
       removeFavorite(Number(id));
@@ -43,6 +47,7 @@ const MoviePage = () => {
     }
   };
 
+  // Fetch movie details from the API when the page loads or the ID changes
   useEffect(() => {
     const fetchMovie = async () => {
       setLoading(true);
@@ -62,6 +67,7 @@ const MoviePage = () => {
     fetchMovie();
   }, [id, API_KEY]);
 
+  // Show loading spinner while fetching data
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh' }}>
@@ -70,6 +76,7 @@ const MoviePage = () => {
     );
   }
 
+  // Show error message if something went wrong
   if (error) {
     return (
       <Box sx={{ textAlign: 'center', py: 5 }}>
@@ -81,15 +88,16 @@ const MoviePage = () => {
     );
   }
 
+  // If movie data is not loaded, show nothing
   if (!movie) return null;
 
-  // Find trailer
+  // Find the trailer video (if available)
   const trailer = movie.videos?.results?.find(v => v.type === 'Trailer') || null;
   
-  // Get director
+  // Find the director from the crew list
   const director = movie.credits?.crew?.find(person => person.job === 'Director');
   
-  // Get top cast (limit to 6)
+  // Get the top 6 cast members
   const topCast = movie.credits?.cast?.slice(0, 6) || [];
 
   return (
@@ -141,6 +149,7 @@ const MoviePage = () => {
 
         {/* Movie Details */}
         <Grid item xs={12} sm={8} md={9}>
+          {/* Movie title and rating */}
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
             <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold', mr: 2 }}>
               {movie.title}
@@ -153,7 +162,7 @@ const MoviePage = () => {
             </Box>
           </Box>
 
-          {/* Release and runtime info */}
+          {/* Release year, runtime, language, budget */}
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, mb: 3 }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Calendar size={16} />
@@ -194,7 +203,7 @@ const MoviePage = () => {
             )}
           </Box>
 
-          {/* Genres */}
+          {/* Genres as chips */}
           <Box sx={{ mb: 3, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
             {movie.genres?.map(genre => (
               <Chip 
@@ -209,7 +218,7 @@ const MoviePage = () => {
             ))}
           </Box>
 
-          {/* Overview */}
+          {/* Movie overview/description */}
           <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>Overview</Typography>
           <Typography variant="body1" paragraph>
             {movie.overview || 'No overview available.'}
@@ -224,7 +233,7 @@ const MoviePage = () => {
             </Box>
           )}
 
-          {/* Cast section */}
+          {/* Top cast section */}
           {topCast.length > 0 && (
             <>
               <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2, mt: 4 }}>Top Cast</Typography>
@@ -267,7 +276,7 @@ const MoviePage = () => {
         </Grid>
       </Grid>
 
-      {/* Trailer section */}
+      {/* Trailer section, if a trailer is available */}
       {trailer && (
         <Box sx={{ mt: 6 }}>
           <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 3 }}>Trailer</Typography>

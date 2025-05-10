@@ -4,10 +4,12 @@ import { Link } from 'react-router-dom';
 import { Heart, Star } from 'lucide-react';
 import { MovieContext } from '../context/MovieContext';
 
+// FavoritesPage shows all movies the user has marked as favorite
 const FavoritesPage = () => {
+  // Get favorites and removeFavorite function from context
   const { favorites, removeFavorite } = useContext(MovieContext);
 
-  // Handle removing from favorites
+  // Remove a movie from favorites when the heart is clicked
   const handleRemoveFavorite = (e, movieId) => {
     e.preventDefault();
     e.stopPropagation();
@@ -16,10 +18,12 @@ const FavoritesPage = () => {
 
   return (
     <>
+      {/* Page title with count of favorites */}
       <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold' }}>
         My Favorite Movies {favorites.length > 0 && `(${favorites.length})`}
       </Typography>
       
+      {/* If no favorites, show a message and a button to browse movies */}
       {favorites.length === 0 ? (
         <Box sx={{ 
           textAlign: 'center', 
@@ -43,6 +47,7 @@ const FavoritesPage = () => {
           </Button>
         </Box>
       ) : (
+        // Show grid of favorite movies
         <Grid container spacing={2}>
           {favorites.map((movie) => (
             <Grid item xs={6} sm={4} md={3} lg={2} key={movie.id}>
@@ -64,7 +69,7 @@ const FavoritesPage = () => {
                 to={`/movie/${movie.id}`}
                 style={{ textDecoration: 'none' }}
               >
-                {/* Remove button */}
+                {/* Remove from favorites button */}
                 <IconButton
                   onClick={(e) => handleRemoveFavorite(e, movie.id)}
                   sx={{
@@ -94,7 +99,7 @@ const FavoritesPage = () => {
                   alt={movie.title}
                 />
                 
-                {/* Rating */}
+                {/* Movie rating */}
                 <Box
                   sx={{
                     position: 'absolute',
@@ -114,7 +119,7 @@ const FavoritesPage = () => {
                   </Typography>
                 </Box>
                 
-                {/* Content */}
+                {/* Movie title and year */}
                 <CardContent sx={{ flexGrow: 1, padding: '12px' }}>
                   <Typography variant="subtitle1" component="div" noWrap fontWeight="bold">
                     {movie.title}
@@ -124,7 +129,7 @@ const FavoritesPage = () => {
                   </Typography>
                 </CardContent>
                 
-                {/* Hover content */}
+                {/* Movie overview appears on hover */}
                 <Box
                   sx={{
                     position: 'absolute',

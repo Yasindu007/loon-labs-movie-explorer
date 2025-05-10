@@ -30,6 +30,7 @@ Movie Explorer is a React web app that lets users discover trending films, searc
 
 ```bash
 git clone https://github.com/yourname/movie-explorer.git
+
 cd movie-explorer
 npm install
 REACT_APP_TMDB_API_KEY=7e5fcf622f8a9dbe8b30eb449838e040
