@@ -86,8 +86,8 @@ src/
 
 1. **Create the React app and install dependencies**
    ```bash
-   npx create-react-app movie-explorer
-   cd movie-explorer
+   npx create-react-app <project-name-or-full-path>
+   cd <project-name-or-full-path>
    npm install axios @mui/material @emotion/react @emotion/styled react-router-dom
    ```
 
