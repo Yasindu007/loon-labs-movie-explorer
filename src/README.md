@@ -95,6 +95,9 @@ src/
    ```bash
    # If Lucide React isn't installed properly, install it explicitly
    npm install lucide-react
+
+   # Install Material UI icons
+   npm install @mui/icons-material
    ```
 
    This will install all required dependencies including:
