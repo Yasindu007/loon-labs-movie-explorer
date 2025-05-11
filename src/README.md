@@ -4,6 +4,17 @@ A modern, responsive React application that allows users to discover trending mo
 
 ---
 
+## ✅ 1️⃣ Install prerequisites
+
+Before starting, make sure you have:
+
+- **Node.js** installed (LTS version, e.g., 18.x or 20.x)
+- **npm** (comes with Node.js) or **yarn**
+- **Git** installed
+- A **GitLab** account
+
+---
+
 ## 🎬 Features
 
 ### Core Features
@@ -24,7 +35,7 @@ A modern, responsive React application that allows users to discover trending mo
 
 ## 🚀 Live Demo
 
-[View the live demo](https://movie-explorer-demo.vercel.app) 
+[View the live demo](https://loon-labs-movie-explorer.netlify.app/) 
 
 ---
 
